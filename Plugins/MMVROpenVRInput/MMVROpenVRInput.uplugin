@@ -1,0 +1,42 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1.0",
+  "FriendlyName": "MMVR OpenVR Input Bridge",
+  "Description": "Routes LiveLinkOpenVR input to the existing MMVR Enhanced Input mappings without a VR session.",
+  "Category": "Input",
+  "EnabledByDefault": false,
+  "CanContainContent": false,
+  "SupportedTargetPlatforms": [
+    "Win64"
+  ],
+  "Modules": [
+    {
+      "Name": "MMVROpenVRInput",
+      "Type": "Runtime",
+      "LoadingPhase": "PostEngineInit",
+      "PlatformAllowList": [
+        "Win64"
+      ],
+      "PlatformArchitectureDenyList": [
+        "Win64:arm64"
+      ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "LiveLink",
+      "Enabled": true
+    },
+    {
+      "Name": "LiveLinkOpenVR",
+      "Enabled": true
+    },
+    {
+      "Name": "EnhancedInput",
+      "Enabled": true
+    }
+  ],
+  "CreatedBy": "Aresic",
+  "CreatedByURL": "https://github.com/Aresic"
+}
