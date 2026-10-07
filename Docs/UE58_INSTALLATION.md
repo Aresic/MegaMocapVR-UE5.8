@@ -84,21 +84,28 @@ contains none of those third-party files. Use the stock UE 5.8 engine plugin lay
 custom LiveLinkOpenVR overrides and different SDK layouts are not validated.
 A packaged host must include its MMVR map and enable the same dependencies.
 
-TESTXR previously passed Editor/Development/Shipping bridge compilation, a
-synthetic routing/release test, an isolated Development package/launch and MMVR
-Development cooks. Hardware PIE input and dashboard handling worked with the
-headset unworn. These results do **not** certify this cleaned source distribution
-or every SteamVR standby configuration. No new build or hardware test was run
-for this integration.
+Historical TESTXR builds, packages and hardware tests provide development
+context. Recovery validation additionally confirmed independent compilation
+of the five assets without the bridge, and recovered a successful cleaned
+bridge Editor Win64 Development build and independent module-load smoke test.
+These results do **not** certify full runtime/hardware behavior or a final
+packaged executable.
+
+Read the [current validation status and known reservations](UE58_VALIDATION.md)
+before using or distributing this source contribution. It documents two
+inherited missing soft references and two pre-existing RigVM sweep errors;
+neither is presented as a confirmed regression introduced by this fork.
 
 Pending checks:
 
-- Build/load this source distribution in a separate UE 5.8 host and confirm the
-  desktop source, input/release, first-session auto preparation and manual retry.
-- Reconfirm portable packaged runtime paths and manifest/DLL staging before
-  claiming the final distribution validated in a packaged executable.
-- Preserve the independent checks: five assets in a UE 5.8 project **without**
-  the bridge; hardware Quick Select at the final **7.5 cm** threshold.
+- Runtime/hardware validation of the cleaned bridge: desktop source creation,
+  actual input routing and release/cleanup, first-session automatic dashboard
+  preparation and manual retry.
+- Final packaging, portable runtime paths, manifest/DLL staging and executable
+  runtime validation.
+- Hardware Quick Select acceptance at the final **7.5 cm** threshold.
+- Assessment or acceptance of the inherited soft references and an error-free
+  RigVM sweep; remaining post-fix arm tracking hardware checks.
 
 ## Licenses
 

@@ -1,5 +1,10 @@
 # MMVROpenVRInput local integration review
 
+> Historical extraction and static review, recorded before the recovery
+> validation. Statements below about unperformed builds/tests describe that
+> earlier stage. See [current validation status and known reservations](UE58_VALIDATION.md)
+> for the October 8 recovery results and the checks still required.
+
 2026-10-08. Prepared on `ue5.8-fixes` after asset commit `21c69b8`. No push,
 upstream synchronization, Unreal compilation, packaging or hardware test.
 

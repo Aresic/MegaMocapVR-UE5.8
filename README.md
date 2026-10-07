@@ -4,6 +4,8 @@ UE 5.8 compatibility/runtime fixes and an optional desktop Valve Index input
 bridge. This is a content-and-plugin distribution, **not a standalone project**.
 
 See [installation, prerequisites and validation limits](Docs/UE58_INSTALLATION.md).
+Source publication is ready with reservations; see the
+[current validation status and known limitations](Docs/UE58_VALIDATION.md).
 The MMVR content retains upstream GPL-3.0; the separately authored
 [MMVROpenVRInput plugin](Plugins/MMVROpenVRInput/THIRD_PARTY_NOTICES.md) is MIT.
 
