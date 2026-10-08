@@ -71,6 +71,10 @@ probes and editor repair tools are not distributed.
 - Explicit arm Soft IK inputs to prevent identity effectors after calibration.
 - Quick Select spatial selection, neutral release and one-time consumption;
   the current threshold is 7.5 cm (`10 * MenuScale`, MenuScale 0.75).
+  Hold A on the corresponding controller, move that hand and release to confirm.
+  Left Up is unassigned: it consumes the selection and closes the wheel without
+  a business action. Its label/icon are blank. Other directions and the right
+  wheel are unchanged; there is no stick selection or Recovery feature.
 - Optional desktop OpenVR input adapter: A/B, stick clicks, trigger pull/click,
   stick/trackpad axes, grip pull and trackpad force. Trigger click is synthesized
   with 0.90/0.80 hysteresis. Stale/missing frames and player cleanup release input.
@@ -88,12 +92,13 @@ contains none of those third-party files. Use the stock UE 5.8 engine plugin lay
 custom LiveLinkOpenVR overrides and different SDK layouts are not validated.
 A packaged host must include its MMVR map and enable the same dependencies.
 
-Historical development builds, packages and hardware tests provide development
-context. Recovery validation additionally confirmed independent compilation
-of the five assets without the bridge, and recovered a successful cleaned
-bridge Editor Win64 Development build and independent module-load smoke test.
-These results do **not** certify full runtime/hardware behavior or a final
-packaged executable.
+Recent development hardware checks found no blocking issue in the baseline,
+including spatial Quick Select at 7.5 cm and arm tracking after calibration.
+The extracted diagnostics compile in an independent Editor Win64 Development
+host; the final Pawn/wheel pass save/reload and compiled spatial tests.
+These results do **not** certify hardware operation of the extracted distribution,
+Standalone or a final packaged executable. No package was produced for this
+checkpoint.
 
 Read the [current validation status and known reservations](UE58_VALIDATION.md)
 before using or distributing this source contribution. It documents two
@@ -107,9 +112,11 @@ Pending checks:
   preparation and manual retry.
 - Final packaging, portable runtime paths, manifest/DLL staging and executable
   runtime validation.
-- Hardware Quick Select acceptance at the final **7.5 cm** threshold.
+- Independent host/hardware checks of the extracted final Quick Select.
+  Development hardware acceptance at **7.5 cm** is recorded in the validation guide.
 - Assessment or acceptance of the inherited soft references and an error-free
-  RigVM sweep; remaining post-fix arm tracking hardware checks.
+  RigVM sweep. Recent development hardware checks found no blocking arm issue,
+  but do not certify every retargeting or packaged configuration.
 
 ## Licenses
 

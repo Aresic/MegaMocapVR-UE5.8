@@ -1,106 +1,49 @@
-# MMVROpenVRInput local integration review
+# Desktop OpenVR input bridge architecture
 
-> Historical extraction and static review, recorded before the recovery
-> validation. Statements below about unperformed builds/tests describe that
-> earlier stage. See [current validation status and known reservations](UE58_VALIDATION.md)
-> for the October 8 recovery results and the checks still required.
+The optional MMVROpenVRInput runtime plugin connects Epic LiveLinkOpenVR's
+`OpenVRInput` subject to MegaMocapVR's existing Valve Index controller mappings
+in a Windows x64 desktop workflow. See the [installation guide](UE58_INSTALLATION.md)
+and [validation limits](UE58_VALIDATION.md).
 
-2026-10-08. Prepared on `ue5.8-fixes` after asset commit `21c69b8`. No push,
-upstream synchronization, Unreal compilation, packaging or hardware test.
+## Input ownership and routing
 
-## Provenance and licensing decision
+Epic LiveLinkOpenVR owns the OpenVR session, action manifest and action-state
+updates. The bridge reuses or creates its public Live Link source, evaluates the
+input subject and injects controller keys into an eligible local MMVR player's
+EnhancedPlayerInput outside stereo VR. It does not modify the Input Actions,
+Mapping Contexts, body tracking, calibration or Control Rigs.
 
-The selected bridge is the local adapter developed for TESTXR, using public UE
-Live Link/Enhanced Input and OpenVR APIs. Existing development reports describe
-its implementation and validations. It is not a copy of Epic LiveLinkOpenVR;
-no Toyxyz implementation was integrated in those reports or selected here.
-Original adapter sources are explicitly MIT (Aresic, 2026). MMVR's original GPL-3.0
-content/license is unchanged. The plugin is optional and has no compile-time
-link to MMVR Blueprint implementations; it identifies a possessed pawn by path.
-This separate license does not relicense MMVR or third-party code.
+Missing or stale frames and player/world cleanup release injected keys. A fresh
+Live Link frame alone does not establish that SteamVR actions are available.
+The adapter does not replace Epic's plugin or use a second calibration system.
 
-Epic engine code/JSON/binaries and Valve SDK files are dependencies, not copied
-into the contribution. The installed OpenVR 1.5.17 LICENSE permits source/binary
-redistribution under BSD-3-Clause with notices; no SDK redistribution is performed
-here. SteamVR/vrcmd is used from the user's installation. No blocking provenance
-issue was identified in the included adapter sources.
+## Desktop preparation and diagnostics
 
-References checked: [Epic EULA, sections 5 and 6(c)](https://www.unrealengine.com/eula/unreal),
-[Valve license](https://github.com/ValveSoftware/openvr/blob/master/LICENSE),
-and the LICENSE bundled with Epic's OpenVR 1.5.17. Epic's restriction on
-non-compatible licenses is why no Epic implementation is copied or labelled
-under the content GPL. These notices grant no new rights in Epic/Valve software.
+`MMVR.OpenVRInput.PrepareDesktop` requests Dashboard dismissal through the
+installed SteamVR utility. Automatic preparation is bounded and does not keep
+closing a Dashboard deliberately reopened later. It does not reset actions or
+change headset presence/power settings.
 
-## Files and deliberate differences from TESTXR
+`MMVR.OpenVRInput.Debug 1` enables passive runtime/action and bridge snapshots;
+`0` disables detailed logging. A separately throttled standby warning describes
+an observed inactive-action condition. Diagnostics do not initialize/shut down
+OpenVR, update action sets, poll events, replace bindings or reset tracking.
+See [troubleshooting](OpenVR_Input_Troubleshooting.md) for the two distinct
+SteamVR conditions and the one-time physical wake workaround.
 
-- `Plugins/MMVROpenVRInput/`: descriptor, Build.cs, input module/state and desktop
-  helper; plugin LICENSE and THIRD_PARTY_NOTICES. No Content, Binaries,
-  Intermediate, local manifests, tests or captures.
-- `README.md` links English `Docs/UE58_INSTALLATION.md`.
-- Desktop helper extracted from the runtime portion of the former diagnostic
-  class. Its OpenVR loading, dashboard check, CLI arguments and bounded retry
-  policy are preserved. Renaming only; no new runtime ownership.
-- Input state implementation preserved except license header. Tick/factory/
-  freshness/release/player/source lifetime paths preserved; optional input
-  snapshots/debug CVar and all hand-chain instrumentation removed.
-- Removed ControlRig/RigVM/AnimGraphRuntime dependencies used only by excluded
-  diagnostics. Remaining modules: Core, CoreUObject, Engine, InputCore,
-  LiveLinkInterface, EnhancedInput, Projects and OpenVR. Plugin dependencies:
-  LiveLink, LiveLinkOpenVR and EnhancedInput.
-- Kept original NonUFS staging of Epic's two installed JSON files. Kept the SDK
-  layout used by UE 5.8/OpenVR 1.5.17. Restricted platform to Windows x64;
-  native arm64 is unsupported by the stock dependency.
-- Five assets and original upstream license untouched. TESTXR and the original
-  reference were read-only; 1,134 protected source/reference files were checked
-  unchanged during extraction.
+The runtime distribution excludes temporary arm-chain diagnostics, tests,
+editor repair tools, private host configuration and generated binaries. It has
+no ControlRig/RigVM diagnostic dependency or local project-path dependency.
 
-## Static verification and limits
+## Dependencies and distribution
 
-Descriptor JSON, runtime-only module/dependency declarations, local includes,
-source/header names, exact source transformations and expected Git file list
-are checked before commit. The input state and desktop preparation bodies are
-compared to the TESTXR versions; removed sections are diagnostic-only. The
-engine's installed OpenVR Build.cs declares its library, delay-load DLL and
-runtime staging. Required stock engine JSON/SDK files exist locally. No local
-project paths, Toyxyz code, copied headers/DLLs/JSON or five-asset changes are
-included. No build result is claimed for this distribution copy.
+The plugin requires Live Link, Epic LiveLinkOpenVR, Enhanced Input and the
+installed OpenVR SDK. Build rules stage Epic's installed action manifest and
+knuckles binding as loose NonUFS files for local packaged hosts; those files,
+engine source and SDK DLLs are not bundled in this Git distribution.
+Windows native arm64 is excluded for the stock dependency layout.
 
-Historical tests belong to the TESTXR implementation: compilation in three
-configurations, routing/release automation, isolated packaging and hardware PIE
-inputs. The reports distinguish the tested CLI from first-session automatic
-integration acceptance; this cleaned source distribution has not yet been run.
-
-## Validation backlog retained
-
-1. Separate UE 5.8 host: build/load the cleaned plugin, exercise desktop input,
-   release/cleanup, auto source, first-session dashboard preparation and manual retry.
-2. Confirm final packaged runtime paths/staging before a packaged-validation claim.
-3. Five corrected assets in a separate UE 5.8 project without the bridge.
-4. Hardware Quick Select final threshold 7.5 cm.
-
-No heavy tests requested or run at this stage. Integration is ready for local
-source review; future publication must retain the validation limits.
-
-## Final static result
-
-**PASS**: 11 expected contribution files, zero changes to `MegaMocapVR/`.
-Input state matches TESTXR except SPDX; desktop preparation matches its original
-function bodies after extraction/rename; source factory, identification and
-cleanup functions match exactly. Descriptor, local includes, dependency files
-and documentation links checked. `git diff --check` passed. No Unreal build or
-runtime result is claimed. This review is included in the separate bridge commit
-following `21c69b8`; the existing asset commit is preserved.
-
-## Source snapshot (TESTXR, read only)
-
-Paths below are relative to `Plugins/MMVROpenVRInput` in TESTXR. SHA-256 identifies
-the versions used; distribution helper/module changes are explained above.
-
-| Source | SHA-256 |
-|---|---|
-| `MMVROpenVRInput.uplugin` | `5b3dc42d033e1db6452f980201131abd64c3672e70d64cf314e05e9506eecf87` |
-| `Source/MMVROpenVRInput/MMVROpenVRInput.Build.cs` | `ab92262c38255d132077f5d6bb74562e2103edd7b8f0c6f132e37a360edb71ce` |
-| `Source/MMVROpenVRInput/Private/MMVROpenVRInputModule.cpp` | `c3e5b52674e4c7000f36f2d1d7138f59f188bf8345f0271cebaef784fdcd24c5` |
-| `Source/MMVROpenVRInput/Private/MMVROpenVRInputState.h` | `5066bd52df29331aa6ade9691161c48ca14f3b3fae9a4990200f72209845c901` |
-| `Source/MMVROpenVRInput/Private/MMVROpenVRInputDiagnostics.cpp` | `0facef32457df021537bb32d14548d892222091fe0e18a4a2453d85661ac01f9` |
-| `Source/MMVROpenVRInput/Private/MMVROpenVRInputDiagnostics.h` | `5189168fcc60fb867428175193d33663f7dbd3224b3c57e6d903077cfcbfd149` |
+MMVR content retains upstream GPL-3.0. The original adapter is MIT; this does
+not relicense Epic/Valve dependencies. See the plugin's
+[provenance and dependency notices](../Plugins/MMVROpenVRInput/THIRD_PARTY_NOTICES.md).
+No Toyxyz skeletal finger tracking implementation is included.
