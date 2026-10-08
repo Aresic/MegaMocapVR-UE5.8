@@ -1,10 +1,11 @@
 # Provenance and dependency notices
 
 The original adapter sources and documentation in this plugin directory are
-licensed under MIT; see LICENSE. They were developed locally for TESTXR with
-Codex assistance and are contributed by Aresic. This is not an Epic plugin fork
+licensed under MIT; see LICENSE. The original adapter is contributed by Aresic.
+This is not an Epic plugin fork
 and does not contain a copied LiveLinkOpenVR implementation or MMVR Blueprint
-code. The distribution copy removes temporary diagnostic instrumentation.
+code. The distribution includes passive OpenVR input diagnostics; temporary
+arm-chain probes and editor repair tools are excluded.
 
 The separate MegaMocapVR content and its modifications retain the upstream
 GPL-3.0 license in the repository root. The plugin's MIT license does not

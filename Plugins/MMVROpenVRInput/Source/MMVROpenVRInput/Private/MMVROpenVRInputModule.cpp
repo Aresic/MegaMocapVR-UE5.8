@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Aresic
 
 #include "MMVROpenVRInputState.h"
+#include "MMVROpenVRInputDiagnostics.h"
 #include "MMVROpenVRDesktop.h"
 #include "Modules/ModuleManager.h"
 #include "Features/IModularFeatures.h"
@@ -11,6 +12,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 #include "EnhancedPlayerInput.h"
+#include "InputAction.h"
+#include "EnhancedActionKeyMapping.h"
 #include "HAL/IConsoleManager.h"
 #include "ILiveLinkClient.h"
 #include "ILiveLinkSource.h"
@@ -22,6 +25,7 @@ static TAutoConsoleVariable<int32> Enabled(TEXT("MMVR.OpenVRInput.Enabled"), 1, 
 static TAutoConsoleVariable<int32> AutoSource(TEXT("MMVR.OpenVRInput.AutoCreateSource"), 1, TEXT("Create an OpenVR Live Link source if none exists when an MMVR player starts."));
 static TAutoConsoleVariable<int32> ControllerId(TEXT("MMVR.OpenVRInput.ControllerId"), 0, TEXT("Local controller receiving the single pair of Index controllers."));
 static TAutoConsoleVariable<float> MaxAge(TEXT("MMVR.OpenVRInput.MaxFrameAge"), 0.25f, TEXT("Release inputs if the locally produced Live Link frame is older than this many seconds."));
+static TAutoConsoleVariable<int32> Debug(TEXT("MMVR.OpenVRInput.Debug"), 0, TEXT("1: passive OpenVR/LiveLink/injection diagnostics at 1 Hz, details every 5s. 2: all details at 1 Hz."));
 static TAutoConsoleVariable<int32> AutoPrepareDesktop(TEXT("MMVR.OpenVRInput.AutoPrepareDesktop"), 1, TEXT("Dismiss SteamVR dashboard once for a new local MMVR player outside stereo VR, using installed vrcmd. Does not change standby settings."));
 
 class FMMVROpenVRInputModule : public IModuleInterface
@@ -31,6 +35,7 @@ class FMMVROpenVRInputModule : public IModuleInterface
         FMMVROpenVRInputState Input;
         TWeakObjectPtr<APawn> Pawn;
         bool bHadFrame = false;
+        double NextDebug = 0;
         bool bDesktopPrepared = false;
         int32 DesktopAttempts = 0;
         double NextDesktopAttempt = 0;
@@ -40,6 +45,7 @@ class FMMVROpenVRInputModule : public IModuleInterface
     FDelegateHandle CleanupHandle;
     FGuid OwnedSource;
     double NextSourceAttempt = 0;
+    FMMVROpenVRInputDiagnostics Diagnostics;
     FMMVROpenVRDesktop Desktop;
     IConsoleObject* PrepareCommand = nullptr;
 
@@ -119,6 +125,15 @@ class FMMVROpenVRInputModule : public IModuleInterface
                 }
                 const double Now = FPlatformTime::Seconds();
                 const double Age = Frame ? Now - Frame->WorldTime.GetSourceTime() : DBL_MAX;
+                Diagnostics.CheckStandbyInput();
+                const bool bLog = Debug.GetValueOnGameThread() && Now >= State.NextDebug;
+                if (bLog)
+                {
+                    State.NextDebug = Now + 1.0;
+                    Diagnostics.LogSnapshot(Debug.GetValueOnGameThread());
+                    UE_LOG(LogMMVROpenVRInput, Log, TEXT("[5 LiveLink] frame=%d age=%.3f (seconds, not log interval); [6 destination] pc=%s pawn=%s input=%s controller=%d mappings=%d"),
+                        Frame != nullptr, Frame ? Age : -1.0, *PC->GetName(), *PC->GetPawn()->GetName(), *Input->GetName(), Local->GetControllerId(), Input->GetEnhancedActionMappingsView().Num());
+                }
                 // This bridge consumes the local OpenVR source, not remotely rebroadcast timestamps.
                 if (Frame && FMath::IsFinite(Age) && Age >= -0.01 && Age <= FMath::Max(0.01f, MaxAge.GetValueOnGameThread()))
                 {
@@ -131,6 +146,18 @@ class FMMVROpenVRInputModule : public IModuleInterface
                     State.Input.Apply(*Input, *Frame);
                     if (!State.bHadFrame) UE_LOG(LogMMVROpenVRInput, Log, TEXT("OpenVRInput fresh frame -> %s (local controller %d); SteamVR action activity not implied"), *PC->GetPawn()->GetName(), Local->GetControllerId());
                     State.bHadFrame = true;
+                    if (bLog)
+                    {
+                        UE_LOG(LogMMVROpenVRInput, Log, TEXT("[6 injection] Applied frame to PlayerInput; bridgeHeld=%d; key/action values below are from the previous processed input tick (Blueprint execution not asserted)"), State.Input.Pressed.Num());
+                        UE_LOG(LogMMVROpenVRInput, Log, TEXT("[6 processed keys] A/B L %.2f/%.2f R %.2f/%.2f trigger %.2f/%.2f sticks L %.2f,%.2f R %.2f,%.2f"),
+                            Input->GetKeyValue(EKeys::ValveIndex_Left_A_Click), Input->GetKeyValue(EKeys::ValveIndex_Left_B_Click), Input->GetKeyValue(EKeys::ValveIndex_Right_A_Click), Input->GetKeyValue(EKeys::ValveIndex_Right_B_Click),
+                            Input->GetKeyValue(EKeys::ValveIndex_Left_Trigger_Axis), Input->GetKeyValue(EKeys::ValveIndex_Right_Trigger_Axis), Input->GetKeyValue(EKeys::ValveIndex_Left_Thumbstick_X), Input->GetKeyValue(EKeys::ValveIndex_Left_Thumbstick_Y), Input->GetKeyValue(EKeys::ValveIndex_Right_Thumbstick_X), Input->GetKeyValue(EKeys::ValveIndex_Right_Thumbstick_Y));
+                        if (Debug.GetValueOnGameThread() > 1)
+                            for (const auto& Mapping : Input->GetEnhancedActionMappingsView())
+                                if (Mapping.Action && Mapping.Key.GetFName().ToString().StartsWith(TEXT("ValveIndex_")))
+                                    UE_LOG(LogMMVROpenVRInput, Log, TEXT("[6 MMVR action] key=%s action=%s processedValue=%s"), *Mapping.Key.ToString(), *Mapping.Action->GetName(), *Input->GetActionValue(Mapping.Action).ToString());
+                        UE_LOG(LogMMVROpenVRInput, Log, TEXT("A/B L %.2f/%.2f R %.2f/%.2f; trigger %.2f/%.2f; sticks L %.2f,%.2f R %.2f,%.2f; age %.3f"), Frame->FaceButtonLeft, Frame->FaceButtonTop, Frame->FaceButtonBottom, Frame->FaceButtonRight, Frame->LeftTriggerAnalog, Frame->RightTriggerAnalog, Frame->LeftStickRight, Frame->LeftStickUp, Frame->RightStickRight, Frame->RightStickUp, Age);
+                    }
                 }
                 else if (State.bHadFrame)
                 {
@@ -138,6 +165,7 @@ class FMMVROpenVRInputModule : public IModuleInterface
                     State.bHadFrame = false;
                     UE_LOG(LogMMVROpenVRInput, Warning, TEXT("OpenVRInput missing/stale: released bridge keys."));
                 }
+                if (bLog && !State.bHadFrame) UE_LOG(LogMMVROpenVRInput, Warning, TEXT("[6 injection] No usable LiveLink frame; no live values injected."));
             }
         }
         for (auto It = Players.CreateIterator(); It; ++It)

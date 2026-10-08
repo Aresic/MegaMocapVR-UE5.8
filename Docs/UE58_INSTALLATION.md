@@ -17,8 +17,8 @@ separately; the five corrected MMVR assets do not require the bridge directly.
 4. Build your project's Editor target. Enable **MMVR OpenVR Input Bridge**,
    **Live Link**, **LiveLinkOpenVR** and **Enhanced Input**, then restart the editor.
    Dependencies are declared by the plugin. For MMVR itself, keep its normal
-   Control Rig and other upstream setup requirements; this plugin does not
-   replace them. Do not copy the TESTXR project's configuration or plugins list.
+   Control Rig, XRBase and other upstream setup requirements; this plugin does not
+   replace them. Configure your own host project; do not copy another host's private settings.
 5. Install/start SteamVR and connect the Index controllers and trackers. Use the
    stock Epic UE 5.8 LiveLinkOpenVR implementation: no engine patch, replacement
    manifest or Toyxyz plugin is provided or required.
@@ -55,10 +55,14 @@ Console commands/options:
 | `MMVR.OpenVRInput.AutoCreateSource 0` / `1` | Disable/enable automatic Live Link source creation (default 1) |
 | `MMVR.OpenVRInput.AutoPrepareDesktop 0` / `1` | Manual/automatic dashboard preparation (default 1) |
 | `MMVR.OpenVRInput.PrepareDesktop` | Request dashboard dismissal again after SteamVR/LiveLinkOpenVR is running |
+| `MMVR.OpenVRInput.Debug 1` / `0` | Enable/disable passive OpenVR and bridge diagnostics (default 0) |
 | `MMVR.OpenVRInput.ControllerId 0` | Local player controller ID |
 | `MMVR.OpenVRInput.MaxFrameAge 0.25` | Maximum accepted local frame age, in seconds |
 
-The temporary TESTXR diagnostic commands are intentionally not shipped.
+The passive HMD standby warning is included and remains active with detailed
+logging off. See [OpenVR input troubleshooting](OpenVR_Input_Troubleshooting.md)
+for the distinct Dashboard and action-initialization cases. Temporary arm-chain
+probes and editor repair tools are not distributed.
 
 ## What this fork adds
 
@@ -84,7 +88,7 @@ contains none of those third-party files. Use the stock UE 5.8 engine plugin lay
 custom LiveLinkOpenVR overrides and different SDK layouts are not validated.
 A packaged host must include its MMVR map and enable the same dependencies.
 
-Historical TESTXR builds, packages and hardware tests provide development
+Historical development builds, packages and hardware tests provide development
 context. Recovery validation additionally confirmed independent compilation
 of the five assets without the bridge, and recovered a successful cleaned
 bridge Editor Win64 Development build and independent module-load smoke test.
