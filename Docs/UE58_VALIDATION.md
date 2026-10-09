@@ -1,11 +1,25 @@
 # UE 5.8 validation and known limitations
 
-Updated October 8, 2026: **pre-finger-tracking checkpoint**.
+Updated October 9, 2026: **finger tracking source added**.
 The development hardware baseline has no currently observed blocking issue.
 This is a source contribution, not certification of every host, runtime or
-packaged application. No skeletal finger tracking is included.
+packaged application. The source-identical finger implementation and component
+were hardware validated in PIE, Standalone and Windows Development Package on
+the tested Index setup. See [finger tracking and its scope](Finger_Tracking_OpenVR.md).
+The older checks and reservations below describe the pre-finger contribution;
+they are not a claim of hardware retesting every public host or excluded component.
 
 ## Development hardware acceptance
+
+Finger publication checks: the transferred native sources compiled for both
+Editor and Game Win64 Development in an independent UE 5.8.3 host, including
+unity builds. Parser/cache/UDP/lifecycle and splay/coherence self-tests passed
+200 checks, including the freshly built native encoder. The fusion component,
+public Pawn and Manny AnimBP compiled in memory and reloaded without errors;
+the unchanged struct and HandRig loaded. No asset was resaved. Sidecar source
+rebuilt with /W4 /WX and passed its self-test and a 90 Hz scheduler check.
+Runtime source and the integrated component match the hardware-validated version;
+only the audit-only Editor module descriptor and distribution tooling/docs differ.
 
 Recent desktop hardware checks found no blocking issue with Vive/Index tracking,
 calibration, Actor Mode, hand/arm tracking, the OpenVR bridge, Enhanced Input or
@@ -51,7 +65,9 @@ coordinates, but reported pre-existing RigVM errors; it was not an error-free ru
 
 Historical development build/cook/package successes do **not** establish that
 the current complete host or cleaned distribution has been repackaged. This
-publication did not create a packaged build.
+October 8 pre-finger publication did not create a packaged build. The subsequent
+finger implementation was validated in a development host's real Windows
+Development package; it does not certify every independently configured host.
 
 ## Known limitations
 
@@ -72,7 +88,7 @@ Recovery experiment. No ragdoll fix is claimed. Soft Recovery remains paused
 and is not distributed; restarting PIE is the current manual workaround for
 a severe spatial problem during testing.
 
-## Checks still required
+## Checks still required for other hosts and historical extracted content
 
 - Hardware operation of the **extracted distribution**: source creation,
   controller routing, release/cleanup, first-session automatic Dashboard

@@ -6,6 +6,8 @@ bridge. This is a content-and-plugin distribution, **not a standalone project**.
 See [installation, prerequisites and validation limits](Docs/UE58_INSTALLATION.md).
 If controllers track but buttons do not respond, see
 [OpenVR input troubleshooting](Docs/OpenVR_Input_Troubleshooting.md).
+Optional dual-hand Index curls and splays are available through the external
+[OpenVR finger sidecar and runtime integration](Docs/Finger_Tracking_OpenVR.md).
 Source publication is ready with reservations; see the
 [current validation status and known limitations](Docs/UE58_VALIDATION.md).
 The MMVR content retains upstream GPL-3.0; the separately authored

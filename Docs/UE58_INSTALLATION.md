@@ -1,7 +1,7 @@
 # Installing the UE 5.8 community fork
 
 This repository contains Unreal content and an optional source plugin. It is
-**not a standalone Unreal project**. The plugin and the content are installed
+**not a standalone Unreal project**. The plugins and the content are installed
 separately; the five corrected MMVR assets do not require the bridge directly.
 
 ## Install
@@ -14,8 +14,13 @@ separately; the five corrected MMVR assets do not require the bridge directly.
    `<YourProject>/Content/MegaMocapVR`. Keep that exact folder name and path.
 3. For desktop Index input, copy `Plugins/MMVROpenVRInput` to
    `<YourProject>/Plugins/MMVROpenVRInput` (not into Content).
+   Copy `Plugins/MMVRFingerFusion` too: the distributed finger component requires
+   its runtime Blueprint node even when external tracking is OFF. For real Index
+   finger data, also install MMVRFingerReceiver and follow the
+   [sidecar setup](Finger_Tracking_OpenVR.md).
 4. Build your project's Editor target. Enable **MMVR OpenVR Input Bridge**,
-   **Live Link**, **LiveLinkOpenVR** and **Enhanced Input**, then restart the editor.
+   **MMVR Finger Fusion**, **Live Link**, **LiveLinkOpenVR** and **Enhanced Input**,
+   then restart the editor.
    Dependencies are declared by the plugin. For MMVR itself, keep its normal
    Control Rig, XRBase and other upstream setup requirements; this plugin does not
    replace them. Configure your own host project; do not copy another host's private settings.
@@ -79,8 +84,10 @@ probes and editor repair tools are not distributed.
   stick/trackpad axes, grip pull and trackpad force. Trigger click is synthesized
   with 0.90/0.80 hysteresis. Stale/missing frames and player cleanup release input.
 
-No grip-force/capacitive-touch or skeletal finger data is invented. Toyxyz finger
-tracking is excluded. The bridge is inactive during stereo VR and does not change
+No grip-force/capacitive-touch or skeletal finger data is invented by the input bridge.
+Optional real Index curls/splays use the separate
+[OpenVR finger sidecar and two runtime plugins](Finger_Tracking_OpenVR.md), not a
+Toyxyz animation plugin. The bridge is inactive during stereo VR and does not change
 tracking, calibration, the solver or the existing Input Actions/Mapping Contexts.
 
 ## Packaging and limitations
@@ -121,7 +128,9 @@ Pending checks:
 ## Licenses
 
 MMVR content retains [upstream GPL-3.0](../LICENSE.md). The independently authored
-adapter is [MIT](../Plugins/MMVROpenVRInput/LICENSE); see its
+native adapters and sidecar use MIT in their own directories. The input bridge is
+[MIT](../Plugins/MMVROpenVRInput/LICENSE); see its
 [dependency/provenance notices](../Plugins/MMVROpenVRInput/THIRD_PARTY_NOTICES.md).
-Unreal/Epic and Valve dependencies remain under their own terms and are not
-bundled as part of this source release.
+Unreal/Epic and Valve dependencies remain under their own terms. Engine and SDK
+binaries are not bundled; the sidecar includes the official OpenVR header and
+its BSD-3-Clause license.
