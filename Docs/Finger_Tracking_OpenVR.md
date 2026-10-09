@@ -163,16 +163,25 @@ are not finger fixes. Existing body/calibration/arms behavior is unchanged.
 
 ## Attribution and licenses
 
+MegaMocapVR is the original project by
+[Megasteakman](https://github.com/Megasteakman/MegaMocapVR). The UE 5.8 fixes and
+finger integration are contributions of this community fork.
+
 Newly authored native plugins and probe: MIT notices in their directories.
 MMVR content and Blueprint modifications retain upstream GPL-3.0. Unreal/Epic
 dependencies are supplied by the user's licensed engine and are not bundled.
 The probe's official Valve OpenVR header/license retains Valve's BSD-3-Clause terms;
 downloaded libraries/DLL and generated binaries must preserve those notices.
 
-Toyxyz Openvr_toolkit informed the Background initialization and minimal skeletal
-manifest layout (the JSON layout was adapted); the probe C++ is newly written.
-toyxyz-vr-mocap served as an architectural reference, not an imported animation
-plugin. Direct author permission was granted: “Feel free to use it. You are welcome
+Special thanks to **toyxyz** and the reference projects
+[Openvr_toolkit](https://github.com/toyxyz/Openvr_toolkit) and
+[toyxyz-vr-mocap](https://github.com/toyxyz/toyxyz-vr-mocap) for helping explain
+OpenVR skeletal actions, background acquisition, hand skeletons/summaries and
+capture architecture. Openvr_toolkit informed the Background initialization and
+minimal skeletal manifest layout (the JSON layout was adapted); the probe C++
+is newly written. toyxyz-vr-mocap served as an architectural reference, not an
+imported animation plugin. Direct author permission was granted: “Feel free to use it. You are welcome
 to copy, modify, and reuse the code without restriction.” This is not a claim of
 MIT/BSD/GPL licensing for either Toyxyz repository. See the
 [probe NOTICE](../Tools/MMVR_FingerProbe/NOTICE.md) for exact provenance and credits.
+No official affiliation or endorsement is implied.

@@ -6,6 +6,9 @@ separately; the five corrected MMVR assets do not require the bridge directly.
 
 ## Install
 
+Use the canonical [main branch](https://github.com/Aresic/MegaMocapVR-UE5.8-FingerTracking/tree/main).
+`ue5.8-fixes` is temporarily retained for history and is no longer recommended.
+
 1. Use a Windows x64 Unreal Engine 5.8 project. Create/use a C++ project target
    and the compiler toolchain required by your engine version: this distribution
    has no prebuilt plugin DLLs. A Blueprint-only project may need an empty C++

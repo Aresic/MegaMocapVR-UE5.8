@@ -1,17 +1,58 @@
-# MegaMocapVR UE 5.8 community fork
+# MegaMocapVR UE5.8 + Valve Index Finger Tracking
 
-UE 5.8 compatibility/runtime fixes and an optional desktop Valve Index input
-bridge. This is a content-and-plugin distribution, **not a standalone project**.
+Community fork of [MegaMocapVR by Megasteakman](https://github.com/Megasteakman/MegaMocapVR),
+targeting Unreal Engine 5.8 with compatibility/runtime fixes, desktop Valve Index
+input improvements and optional dual-hand finger tracking. This is a
+content-and-plugin distribution, **not a standalone project**.
 
 See [installation, prerequisites and validation limits](Docs/UE58_INSTALLATION.md).
 If controllers track but buttons do not respond, see
 [OpenVR input troubleshooting](Docs/OpenVR_Input_Troubleshooting.md).
-Optional dual-hand Index curls and splays are available through the external
-[OpenVR finger sidecar and runtime integration](Docs/Finger_Tracking_OpenVR.md).
+Finger tracking uses a lightweight external **OpenVR Background sidecar** with
+FromDevice skeletal summaries: five curls and four splays per hand, transported
+over loopback OSC into MMVR's existing animation path. The implementation was
+hardware validated in **PIE, Standalone Game and Windows Development Package**.
+See [finger sidecar setup and runtime integration](Docs/Finger_Tracking_OpenVR.md).
 Source publication is ready with reservations; see the
 [current validation status and known limitations](Docs/UE58_VALIDATION.md).
 The MMVR content retains upstream GPL-3.0; the separately authored
 [MMVROpenVRInput plugin](Plugins/MMVROpenVRInput/THIRD_PARTY_NOTICES.md) is MIT.
+
+## Repository and branches
+
+Canonical repository: [Aresic/MegaMocapVR-UE5.8-FingerTracking](https://github.com/Aresic/MegaMocapVR-UE5.8-FingerTracking).
+Use **main**, the default branch. It contains the validated `bb56e00` implementation
+and subsequent documentation updates. `ue5.8-fixes` is temporarily retained at
+`bb56e00` as a redundant implementation branch; it is not the recommended branch.
+The historical main baseline is preserved by both branch and annotated tag
+`baseline-pre-ue5.8-fixes`, targeting `b0805089e0bf0d5192893f93843cb7550ae21ed0`.
+The baseline tag is a fixed historical checkpoint, not a product release.
+
+```shell
+git clone --branch main https://github.com/Aresic/MegaMocapVR-UE5.8-FingerTracking.git
+```
+
+## Credits
+
+MegaMocapVR was created by **Megasteakman**; the original project information and
+links below are preserved. UE 5.8 fixes, input improvements and this finger
+tracking integration are contributions of the Aresic community fork.
+
+The Valve Index finger tracking work was informed in part by
+[toyxyz/Openvr_toolkit](https://github.com/toyxyz/Openvr_toolkit) and
+[toyxyz/toyxyz-vr-mocap](https://github.com/toyxyz/toyxyz-vr-mocap). Special thanks
+to **toyxyz** for the OpenVR skeletal tracking reference implementation, which
+helped explain skeletal actions, background acquisition, hand skeletons,
+skeletal summaries and capture architecture, and for explicitly allowing reuse,
+modification and adaptation of the code and ideas.
+
+The implementation here uses a lightweight background sidecar tailored for
+MegaMocapVR and Unreal Engine. Its minimal skeletal JSON layout was adapted from
+Openvr_toolkit; its C++ summary probe is newly written, and toyxyz-vr-mocap served
+as an architectural reference. Direct author permission is recorded in the
+[probe NOTICE](Tools/MMVR_FingerProbe/NOTICE.md); it is not a claim of a standard
+MIT, BSD or GPL license for those reference repositories. No official affiliation
+or endorsement is implied. Valve OpenVR and Unreal Engine retain their own terms.
 
 ---
 

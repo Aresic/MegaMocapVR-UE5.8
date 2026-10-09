@@ -26,8 +26,10 @@ relicense that content or any third-party dependency.
   and the LICENSE shipped with the installed SDK.
 - SteamVR and vrcmd.exe: supplied by the user's SteamVR installation, not copied
   or relicensed. Desktop preparation invokes the installed tool.
-- Toyxyz: no source, manifest, skeletal finger tracking implementation or asset
-  is included. Any future incorporation requires a separate rights review.
+- Toyxyz: no Toyxyz source, manifest, skeletal implementation or asset is included
+  in this input bridge. The separate finger sidecar uses Toyxyz references and an
+  adapted minimal skeletal JSON layout; see its
+  [attribution and direct-author permission](../../Tools/MMVR_FingerProbe/NOTICE.md).
 
 Only the original adapter is licensed by this plugin. Unreal Engine remains
 subject to Epic's terms; do not apply the repository's content GPL license to
