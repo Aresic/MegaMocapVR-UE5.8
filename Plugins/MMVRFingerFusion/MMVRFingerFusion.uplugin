@@ -1,0 +1,17 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.2-experimental",
+  "FriendlyName": "MMVR Finger Fusion",
+  "Description": "Optional per-hand curl merge before the existing MMVR finger writer.",
+  "Category": "Animation",
+  "EnabledByDefault": false,
+  "CanContainContent": false,
+  "Modules": [
+    {
+      "Name": "MMVRFingerFusion",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

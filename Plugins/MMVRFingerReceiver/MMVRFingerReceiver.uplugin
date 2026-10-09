@@ -1,0 +1,33 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1-experimental",
+  "FriendlyName": "MMVR Finger Receiver",
+  "Description": "Dual-hand OSC cache and diagnostics, optional read-only curl source for MMVR fusion.",
+  "Category": "Input",
+  "EnabledByDefault": false,
+  "CanContainContent": false,
+  "SupportedTargetPlatforms": [
+    "Win64"
+  ],
+  "Modules": [
+    {
+      "Name": "MMVRFingerReceiver",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "PlatformAllowList": [
+        "Win64"
+      ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "MMVRFingerFusion",
+      "Enabled": true
+    },
+    {
+      "Name": "OSC",
+      "Enabled": true
+    }
+  ]
+}
