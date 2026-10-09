@@ -1,6 +1,6 @@
 # Installing the UE 5.8 community fork
 
-This repository contains Unreal content and an optional source plugin. It is
+This repository contains Unreal content and C++ source plugins. It is
 **not a standalone Unreal project**. The plugins and the content are installed
 separately; the five corrected MMVR assets do not require the bridge directly.
 
@@ -21,9 +21,15 @@ Use the canonical [main branch](https://github.com/Aresic/MegaMocapVR-UE5.8-Fing
    its runtime Blueprint node even when external tracking is OFF. For real Index
    finger data, also install MMVRFingerReceiver and follow the
    [sidecar setup](Finger_Tracking_OpenVR.md).
-4. Build your project's Editor target. Enable **MMVR OpenVR Input Bridge**,
-   **MMVR Finger Fusion**, **Live Link**, **LiveLinkOpenVR** and **Enhanced Input**,
-   then restart the editor.
+4. In **Edit > Plugins**, enable **MMVR OpenVR Input Bridge**, **MMVR Finger Fusion**,
+   **Live Link**, **LiveLinkOpenVR** and **Enhanced Input**; for external fingers
+   also enable **MMVR Finger Receiver** and **OSC**.
+   Compile your UE 5.8 project after installing and enabling the plugins: they
+   contain C++ source and must be built for your project before Unreal can use them. If
+   Unreal asks to rebuild modules when opening the `.uproject`, accept the rebuild.
+   A Blueprint-only project may first need an empty C++ class as noted above.
+   For a manual Visual Studio build, close Unreal, select **Development Editor / Win64**,
+   build your project's **Editor** target, then reopen Unreal.
    Dependencies are declared by the plugin. For MMVR itself, keep its normal
    Control Rig, XRBase and other upstream setup requirements; this plugin does not
    replace them. Configure your own host project; do not copy another host's private settings.

@@ -29,7 +29,11 @@ skeletal summaries. No full-bone capture, fake trigger/grip input or second writ
    into your project's Plugins folder. Enable them and Epic OSC. Receiver declares
    the Fusion/OSC dependencies; Fusion must remain installed for the integrated
    Blueprint node, even if the optional receiver is disabled.
-3. Build your project's Editor target with UE 5.8's Windows C++ toolchain.
+3. Compile your UE 5.8 project after installing the plugins; their C++ source
+   must be built for your project before Unreal can use it. If Unreal asks to
+   rebuild modules when opening the `.uproject`, accept the rebuild. A Blueprint-only
+   project may first need an empty C++ class. For a manual Visual Studio build,
+   use **Development Editor / Win64** and build your project's **Editor** target.
    This source distribution is not a .uproject and supplies no prebuilt DLLs.
 4. Build the sidecar separately; from `Tools/MMVR_FingerProbe`:
 
