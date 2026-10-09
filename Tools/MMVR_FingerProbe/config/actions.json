@@ -1,0 +1,36 @@
+{
+  "action_sets": [
+    {
+      "name": "/actions/mmvrfingerprobe",
+      "usage": "leftright"
+    }
+  ],
+  "default_bindings": [
+    {
+      "controller_type": "knuckles",
+      "binding_url": "bindings_knuckles.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/mmvrfingerprobe/in/skeletonleft",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/left",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/mmvrfingerprobe/in/skeletonright",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/right",
+      "requirement": "optional"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_US",
+      "/actions/mmvrfingerprobe": "MMVR Finger Probe V1.1",
+      "/actions/mmvrfingerprobe/in/skeletonleft": "Left Hand Skeleton",
+      "/actions/mmvrfingerprobe/in/skeletonright": "Right Hand Skeleton"
+    }
+  ]
+}

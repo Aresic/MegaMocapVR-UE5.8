@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# OpenVR sidecar build products and fetched SDK binaries
+/Tools/MMVR_FingerProbe/build/
+/Tools/MMVR_FingerProbe/bin/
+/Tools/MMVR_FingerProbe/third_party/openvr-1.5.17/lib/
+/Tools/MMVR_FingerProbe/third_party/openvr-1.5.17/bin/
+*.pdb

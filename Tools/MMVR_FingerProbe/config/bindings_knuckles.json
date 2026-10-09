@@ -1,0 +1,23 @@
+{
+  "action_manifest_version": 1,
+  "bindings": {
+    "/actions/mmvrfingerprobe": {
+      "skeleton": [
+        {
+          "output": "/actions/mmvrfingerprobe/in/skeletonleft",
+          "path": "/user/hand/left/input/skeleton/left"
+        },
+        {
+          "output": "/actions/mmvrfingerprobe/in/skeletonright",
+          "path": "/user/hand/right/input/skeleton/right"
+        }
+      ]
+    }
+  },
+  "category": "steamvr_input",
+  "controller_type": "knuckles",
+  "description": "Left and right skeletal input only for the independent MMVR Finger Probe V1.1",
+  "name": "MMVR Finger Probe V1.1 Knuckles",
+  "options": {},
+  "simulated_actions": []
+}
