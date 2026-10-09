@@ -108,13 +108,14 @@ contains none of those third-party files. Use the stock UE 5.8 engine plugin lay
 custom LiveLinkOpenVR overrides and different SDK layouts are not validated.
 A packaged host must include its MMVR map and enable the same dependencies.
 
-Recent development hardware checks found no blocking issue in the baseline,
-including spatial Quick Select at 7.5 cm and arm tracking after calibration.
-The extracted diagnostics compile in an independent Editor Win64 Development
-host; the final Pawn/wheel pass save/reload and compiled spatial tests.
-These results do **not** certify hardware operation of the extracted distribution,
-Standalone or a final packaged executable. No package was produced for this
-checkpoint.
+Earlier pre-finger development checks found no blocking issue with spatial Quick
+Select at 7.5 cm or arm tracking after calibration. Those extraction checks alone
+did not certify a packaged host. Subsequently, the source-identical Finger
+Tracking V1 implementation was hardware validated in PIE, Standalone Game and a
+Windows Development Package on the tested UE 5.8 / Index setup. Build, cook,
+stage, package and packaged startup passed; Full Rebuild remained OFF. This
+targeted validation does not certify every host project, rig, engine configuration,
+Shipping build or custom LiveLink/OpenVR layout.
 
 Read the [current validation status and known reservations](UE58_VALIDATION.md)
 before using or distributing this source contribution. It documents two
@@ -126,8 +127,9 @@ Pending checks:
 - Runtime/hardware validation of the cleaned bridge: desktop source creation,
   actual input routing and release/cleanup, first-session automatic dashboard
   preparation and manual retry.
-- Final packaging, portable runtime paths, manifest/DLL staging and executable
-  runtime validation.
+- Independently configured hosts: portable runtime paths, manifest/DLL staging,
+  cook/package and executable behavior beyond the tested Finger Tracking setup;
+  Shipping remains unvalidated.
 - Independent host/hardware checks of the extracted final Quick Select.
   Development hardware acceptance at **7.5 cm** is recorded in the validation guide.
 - Assessment or acceptance of the inherited soft references and an error-free

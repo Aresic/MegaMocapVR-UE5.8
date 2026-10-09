@@ -95,8 +95,9 @@ a severe spatial problem during testing.
   preparation, manual retry and standby-warning guards.
 - Targeted hardware confirmation of the blank, unassigned left-Up slot in body
   and VTuber modes, with other directions and the right wheel preserved.
-- Standalone desktop and a final packaged host: cook/staging, portable native
-  paths, loose action/binding JSON files, OpenVR DLL and executable runtime.
+- Independently configured hosts and custom OpenVR layouts: Standalone/package
+  behavior, portable native paths, loose action/binding JSON files and OpenVR DLL
+  staging beyond the tested Finger Tracking setup. Shipping remains unvalidated.
 - Assessment/acceptance of inherited soft references and an error-free RigVM
   sweep; broader arm/retargeting configurations remain outside current acceptance.
 
